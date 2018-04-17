@@ -1,42 +1,6 @@
-import mysql.connector
-from mysql.connector import errorcode
 from netCDF4 import Dataset
 from dateutil.parser import parse
-
-class NumpyMySQLConverter(mysql.connector.conversion.MySQLConverter):
-    """ A mysql.connector Converter that handles Numpy types """
-
-    def _float32_to_mysql(self, value):
-        return float(value)
-
-    def _float64_to_mysql(self, value):
-        return float(value)
-
-    def _int32_to_mysql(self, value):
-        return int(value)
-
-    def _int64_to_mysql(self, value):
-        return int(value)
-
-def getDBCursor():
-    # connection details must be changed to specify new dabases
-    dbuser = 'root'
-    dbpass = 'password'
-    dbhost = 'localhost'
-    dbdb = 'microgriddb'
-    try:
-        conn = mysql.connector.connect(user=dbuser, password=dbpass, host=dbhost, database=dbdb)
-    except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-          print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-          print("Database does not exist")
-        else:
-          print(err)
-        sys.exit()
-
-    conn.set_converter_class(NumpyMySQLConverter)
-    return conn, conn.cursor()
+from dbconnector import getDBCursor
 
 addSource = (
     "INSERT INTO power_sources "
@@ -54,6 +18,7 @@ addTimeValue = (
     "(sourceId, time, value) "
     "VALUES (%(sourceId)s, %(time)s, %(value)s)"
 )
+addTimeValueBase = 'INSERT IGNORE INTO power_time_values (sourceId, time, value) VALUES '
 addDayValue = (
     "INSERT INTO power_day_values "
     "(sourceId, day, dailyMin, dailyMax, dailyMean, dailyStdDev) "
@@ -104,6 +69,15 @@ def readTimeValue(sourceId, ncData, index):
     }
     return timeValueData
 
+def readTimeValueRange(sourceId, ncData, index, chunkSize):
+    timeData = ncData.variables['time'][index:index+chunkSize]
+    valueData = ncData.variables['value'][index:index+chunkSize]
+
+    str = ''
+    for i in range(0, len(timeData)):
+        str += '({},{},{}),'.format(sourceId, timeData[i], valueData[i])
+    return str.strip(',')
+
 def readDayValue(sourceId, ncData, index):
     dailyMinData = ncData.variables['DailyMin']
     dailyMaxData = ncData.variables['DailyMax']
@@ -124,6 +98,7 @@ def readPowerDataFile(path=None, filename=None):
     if path == None: path = 'data/139_000/'
     if filename == None: filename = 'Nome-RC-FedVab@2014-02-01T000000Z@P1M@PT334F@V0.nc'
     conn, db = getDBCursor()
+    chunkSize = 500
 
     ncData = Dataset(path + filename)
 
@@ -136,9 +111,13 @@ def readPowerDataFile(path=None, filename=None):
 
     # for each time/value record, read and create db entry
     numTime = len(ncData.dimensions['time'])
-    for i in range(0, numTime):
-        timeValueData = readTimeValue(sourceId, ncData, i)
-        db.execute(addTimeValue, timeValueData)
+    index = 0
+    while index < numTime:
+        cmd = addTimeValueBase
+        cmd += readTimeValueRange(sourceId, ncData, index, chunkSize)
+        db.execute(cmd)
+        print 'At row {} of {}'.format(index, numTime)
+        index += chunkSize
 
     # for each day record, read and create db entry
     numDays = len(ncData.dimensions['days'])
@@ -154,4 +133,10 @@ def readPowerDataFile(path=None, filename=None):
     db.close()
     conn.close()
 
-readPowerDataFile()
+readPowerDataFile('data/', 'Nome-C1-FedIa@2012-02-01T000000Z@P1M@PT424F@V0.nc')
+readPowerDataFile('data/', 'Nome-C1-FedIa@2013-01-01T000000Z@P1M@PT374F@V0.nc')
+readPowerDataFile('data/', 'Nome-C1-FedIa@2013-02-01T000000Z@P1M@PT395F@V0.nc')
+readPowerDataFile('data/', 'Nome-C1-FedIa@2014-01-01T000000Z@P1M@PT968F@V0.nc')
+readPowerDataFile('data/', 'Nome-C1-FedIa@2014-02-01T000000Z@P1M@PT667F@V0.nc')
+readPowerDataFile('data/', 'Nome-C1-FedIa@2015-01-01T000000Z@P1M@PT671F@V0.nc')
+readPowerDataFile('data/', 'Nome-C1-FedIa@2015-02-01T000000Z@P1M@PT665F@V0.nc')

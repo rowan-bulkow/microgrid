@@ -1,0 +1,63 @@
+netcdf Nome-C1-FedIa@2012-01-01T000000Z@P1M@PT318F@V0 {
+dimensions:
+	time = 8418207 ;
+	days = 31 ;
+variables:
+	double time(time) ;
+		time:units = "seconds" ;
+		time:description = "seconds since the UNIX epoch" ;
+	double value(time) ;
+		value:description = "City Feeder 1 Phase A Current" ;
+		value:Type = "Fed" ;
+		value:TypeDescription = "City Feeder 1" ;
+		value:Make = "N/A" ;
+		value:Model = "N/A" ;
+		value:Year = "N/A" ;
+		value:DateInstalled = "N/A" ;
+		value:URLOfQAReport = "/projects/WIND/WebAppNetCDF/preprocess/Nome/April2013/QAReport@NomeAPH_AMPS@2015-12-18T184224Z.pdf" ;
+		value:URLOfDataLicense = "N/A" ;
+		value:DataProvider = "Nome Joint Utility System" ;
+		value:QAProvider = "Alaska Center for Energy and Power" ;
+		value:CopyrightHolder = "Nome Joint Utility System" ;
+		value:URI = "[]" ;
+		value:SamplingRate = 3.14299843189964 ;
+		value:Scale = 1. ;
+		value:Offset = 0. ;
+		value:Units = "A" ;
+		value:RangeMax = 245. ;
+		value:RangeMin = 68. ;
+		value:TheoreticalRangeMax = NaN ;
+		value:TheoreticalRangeMin = NaN ;
+		value:ChannelName = "FedIa" ;
+		value:OriginalChannelName = "SWG_BTRC1_APHS_RAWAMPS" ;
+		value:OriginalUnits = "A" ;
+		value:MonthlyMin = 68. ;
+		value:MonthlyMax = 245. ;
+		value:MonthlyMean = 142.727357143867 ;
+		value:MonthlyStdDev = 28.5832980623335 ;
+		value:StartTime = 1325376000. ;
+		value:PowerType = "Distribution" ;
+		value:Version = 0. ;
+	double DailyMin(days) ;
+	double DailyMax(days) ;
+	double DailyMean(days) ;
+	double DailyStdDev(days) ;
+
+// global attributes:
+		:Latitude = 64.5039 ;
+		:Longitude = -165.3994 ;
+		:AirportCode = "NOM" ;
+		:PlaceName = "Nome" ;
+		:UtilityName = "Nome Joint Utility System" ;
+		:StationName = "C1" ;
+		:Make = "N/A" ;
+		:Model = "N/A" ;
+		:SpecSheetURL = "N/A" ;
+		:TypeOfMeasurement = "Phase A Current" ;
+		:Accuracy = "N/A" ;
+		:Resolution = 1. ;
+		:Units = "A" ;
+		:DeviceRangeMax = NaN ;
+		:DeviceRangeMin = NaN ;
+		:DeviceInstallationDate = "N/A" ;
+}
