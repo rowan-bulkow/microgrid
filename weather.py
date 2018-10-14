@@ -1,8 +1,9 @@
-import weatherscrape as scrape
 from dbconnector import getDBCursor
 import datetime
 from selenium import webdriver
 import sys
+
+import weatherscrape as scrape
 
 dexterPwsId = 'KAKNOME1'
 
@@ -47,9 +48,9 @@ def add_month(year, month, startDay=1):
     conn.close()
 
 # add_month(2012, 2, 6)
-#
-# yearsNeeded = [2013, 2014, 2015]
-# monthsNeeded = [1, 2]
-# for year in yearsNeeded:
-#     for month in monthsNeeded:
-#         add_month(year, month)
+
+yearsNeeded = [2013, 2014, 2015]
+monthsNeeded = [1, 2]
+for year in yearsNeeded:
+    for month in monthsNeeded:
+        add_month(year, month)

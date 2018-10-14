@@ -98,7 +98,7 @@ def readPowerDataFile(path=None, filename=None):
     if path == None: path = 'data/139_000/'
     if filename == None: filename = 'Nome-RC-FedVab@2014-02-01T000000Z@P1M@PT334F@V0.nc'
     conn, db = getDBCursor()
-    chunkSize = 500
+    chunkSize = 1000
 
     ncData = Dataset(path + filename)
 
@@ -133,7 +133,7 @@ def readPowerDataFile(path=None, filename=None):
     db.close()
     conn.close()
 
-readPowerDataFile('data/', 'Nome-C1-FedIa@2012-02-01T000000Z@P1M@PT424F@V0.nc')
+# readPowerDataFile('data/', 'Nome-C1-FedIa@2012-02-01T000000Z@P1M@PT424F@V0.nc')
 readPowerDataFile('data/', 'Nome-C1-FedIa@2013-01-01T000000Z@P1M@PT374F@V0.nc')
 readPowerDataFile('data/', 'Nome-C1-FedIa@2013-02-01T000000Z@P1M@PT395F@V0.nc')
 readPowerDataFile('data/', 'Nome-C1-FedIa@2014-01-01T000000Z@P1M@PT968F@V0.nc')

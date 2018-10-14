@@ -4,8 +4,7 @@
 CREATE DATABASE IF NOT EXISTS microgriddb;
 use microgriddb;
 
--- Table to store weather data, specifically that from a 'personal weather station'
--- page from wundergound
+-- Table to store weather data, specifically that from a 'personal weather station' page from wundergound
 -- # Time	Temperature	Dew Point	Humidity	Wind	Speed	Gust	Pressure	Precip. Rate.	Precip. Accum.
 -- # 12:00 AM	5.4 F	0.6 F	80 %	SE	2 mph	3 mph	30.37 in	0 in	0 in
 create table weather (
